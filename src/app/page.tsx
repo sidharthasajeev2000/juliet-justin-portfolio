@@ -18,15 +18,30 @@ function Block({ t, items }: { t: string; items: string[] }) {
   return (<div data-reveal><h3 className="track mb-3 text-sm font-semibold text-olive">{t}</h3><ul className="space-y-2 text-sm leading-relaxed">{items.map((i) => <li key={i}>{i}</li>)}</ul></div>);
 }
 
-const works = [
-  { n: "01", t: "Film Institute", s: "Thesis" },
-  { n: "02", t: "Artist's Residence", s: "Vytilla, Kochi", imgs: ["artists-residence-1.jpg", "artists-residence-2.jpg"] },
-  { n: "03", t: "Mixed-Use High Rise Building" },
-  { n: "04", t: "Housing" },
-  { n: "05", t: "Urban Hub", s: "Time Bound Test" },
-  { n: "06", t: "Internship Work", s: "Selected Works" },
-  { n: "07", t: "Miscellaneous" },
+type Work = { n: string; t: string; tl?: string; s?: string; meta?: string[]; body?: string; quote?: string; imgs: string[]; half?: boolean };
+const seq = (k: string, n: number) => Array.from({ length: n }, (_, i) => `${k}-${i + 1}.jpg`);
+const works: Work[] = [
+  { n: "01", t: "Film Institute", tl: "Thesis", s: "Thesis · Parvai: The Cinematic Continuum", meta: ["Academic Thesis · Chennai, India · 2025–2026", "Site area 13 acres · Built-up area 10,000 sq.m", "Program: Educational + Public", "Software: AutoCAD · SketchUp · Photoshop · Lumion"], quote: "Where Cinema becomes a shared public experience and the story is portrayed through the Director\u2019s lens.", imgs: seq("film-institute", 7) },
+  { n: "02", t: "Artist's Residence", s: "Vytilla, Kochi · Area 607 sq.m / 15 cents", body: "A harmonious sanctuary designed for a sand animation artist, where the fluid nature of the craft meets the timeless stability of yurt-inspired architecture. The residence integrates open-plan living with dedicated studio space, utilizing circular geometry with riverfront landscape. Kaniyampuzha River which explores the synergy between an artist\u2019s hobbies and their living space. The design features a guitar-shaped public garden and a greenhouse-integrated corridor, blending nomadic structural wisdom with modern site-specific sustainability.", imgs: seq("artists-residence", 2) },
+  { n: "03", t: "Mixed-Use High Rise Building", s: "Vertical Housing", imgs: seq("mixed-use", 2) },
+  { n: "04", t: "Housing", s: "Building HIG, MIG, LIG and EWS Houses · Large Scale Project", imgs: seq("housing", 2) },
+  { n: "05", t: "Urban Hub", tl: "Time Bound Test", s: "Time Bound Test · Urban Scale Project", imgs: seq("urban-hub", 1) },
+  { n: "06", t: "Internship Work", tl: "Selected Works", s: "Selected Works · Asif Rahman Junaid Architects (ARJ+ARCHITECTS)", imgs: seq("internship", 1), half: true },
+  { n: "07", t: "Miscellaneous", s: "Canvas Painting · Sketching · Face Mask Painting · Mandala Art · Illustrations · Photography", imgs: seq("miscellaneous", 1), half: true },
 ];
+
+function Card({ w }: { w: Work }) {
+  return (
+    <article data-reveal id={`w${w.n}`} className="feature scroll-mt-24 border border-ink/15 bg-paper p-6 md:p-10">
+      <div className="flex items-end gap-5"><span className="text-6xl font-bold text-olive md:text-7xl">{w.n}</span><div><h3 className="track text-xl font-semibold">{w.t}</h3>{w.s && <p className="track mt-1 text-[11px] leading-relaxed text-olive">{w.s}</p>}</div></div>
+      {w.quote && <p className="mt-6 max-w-3xl text-base italic leading-loose">&ldquo;{w.quote}&rdquo;</p>}
+      {w.meta && <ul className="track mt-4 space-y-1 text-[10px] text-ink/70">{w.meta.map((m) => <li key={m}>{m}</li>)}</ul>}
+      {w.body && <p className="mt-6 max-w-3xl text-sm leading-loose">{w.body}</p>}
+      <div className="mt-8 space-y-6">{w.imgs.map((i, k) => <a key={i} href={`${B}/img/${i}`} target="_blank" rel="noreferrer" data-reveal className="sheet block overflow-hidden border border-ink/10"><img src={`${B}/img/${i}`} alt={`${w.t} — sheet ${k + 1}`} loading="lazy" decoding="async" className="w-full" /></a>)}</div>
+      <p className="track mt-3 text-[9px] text-ink/50">Click a sheet to view full size</p>
+    </article>
+  );
+}
 
 export default function Page() {
   return (
@@ -91,28 +106,22 @@ export default function Page() {
               <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-sand text-sm font-semibold tracking-widest transition-all duration-300 group-hover:-translate-y-1 group-hover:bg-olive group-hover:text-paper">{w.n}</span>
               <span className="mx-auto mt-1 block h-3 w-3 rounded-full bg-olive transition-transform duration-300 group-hover:scale-150" />
               <span className="track mt-3 block px-1 text-[10px] font-semibold leading-relaxed group-hover:text-olive">{w.t}</span>
-              {w.s && <span className="track block text-[9px] text-olive">({w.s})</span>}
+              {w.tl && <span className="track block text-[9px] text-olive">({w.tl})</span>}
             </a>))}</div>
         </div>
-        <div className="space-y-10">{works.map((w) => w.imgs ? (
-          <article data-reveal key={w.n} id={`w${w.n}`} className="feature scroll-mt-24 border border-ink/15 bg-paper p-6 md:p-10">
-            <div className="flex items-end gap-5"><span className="text-6xl font-bold text-olive md:text-7xl">{w.n}</span><div><h3 className="track text-xl font-semibold">{w.t}</h3><p className="track mt-1 text-[11px] text-olive">{w.s} · Area 607 sq.m / 15 cents</p></div></div>
-            <p className="mt-6 max-w-3xl text-sm leading-loose">A harmonious sanctuary designed for a sand animation artist, where the fluid nature of the craft meets the timeless stability of yurt-inspired architecture. The residence integrates open-plan living with dedicated studio space, utilizing circular geometry with riverfront landscape. Kaniyampuzha River which explores the synergy between an artist&rsquo;s hobbies and their living space. The design features a guitar-shaped public garden and a greenhouse-integrated corridor, blending nomadic structural wisdom with modern site-specific sustainability.</p>
-            <div className="mt-8 space-y-6">{w.imgs.map((i, k) => <a key={i} href={`${B}/img/${i}`} target="_blank" data-reveal className="sheet mb-6 block overflow-hidden border border-ink/10"><img src={`${B}/img/${i}`} alt={`${w.t} — sheet ${k + 1}`} loading="lazy" decoding="async" className="w-full" /></a>)}</div>
-          </article>) : null)}
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{works.filter((w) => !w.imgs).map((w, idx) => (
-            <article data-reveal style={{ transitionDelay: `${(idx % 3) * 90}ms` }} key={w.n} id={`w${w.n}`} className="card group relative flex min-h-56 scroll-mt-24 flex-col justify-between overflow-hidden border border-ink/15 p-8">
-              <Tree className="absolute -bottom-2 right-3 w-14 opacity-60 transition-transform duration-500 group-hover:-translate-y-1 group-hover:scale-110" />
-              <span className="text-5xl font-bold text-olive/80 transition-colors duration-300 group-hover:text-olive">{w.n}</span>
-              <div><h3 className="track text-base font-semibold">{w.t}</h3>{w.s && <p className="track mt-1 text-[11px] text-olive">{w.s}</p>}<p className="mt-4 text-xs tracking-wide text-ink/60">Project sheets coming soon</p></div>
-            </article>))}</div>
+        <div className="space-y-10">{works.filter((w) => !w.half).map((w) => <Card key={w.n} w={w} />)}
+          <div className="grid gap-10 md:grid-cols-2">{works.filter((w) => w.half).map((w) => <Card key={w.n} w={w} />)}</div>
         </div>
       </section>
 
       <section id="contact" className="relative border-t border-ink/10">
         <div className="mx-auto flex max-w-6xl flex-col items-center px-6 py-24 text-center">
           <H n="Get in touch" t="Contact" />
-          <p data-reveal className="max-w-md text-sm leading-loose">Contact details coming soon. Juliet is open to joining a studio where curiosity and craft are valued.</p>
+          <div data-reveal className="space-y-3 text-sm tracking-wide">
+            <p><a className="hover:text-olive" href="tel:+916238627523">+91 6238627523</a></p>
+            <p><a className="hover:text-olive" href="mailto:julietj2113@gmail.com">julietj2113@gmail.com</a></p>
+            <p><a className="hover:text-olive" href="https://www.behance.net/juliet-justin" target="_blank" rel="noreferrer">behance.net/juliet-justin</a></p>
+          </div>
         </div>
         <div className="flex items-end justify-between px-6"><Tree className="w-20" /><Tree className="w-12" /></div>
         <div className="h-px bg-ink/40" />
